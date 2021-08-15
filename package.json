@@ -4,15 +4,18 @@
   "description": "a command line interface for FD projects",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc && npx cpy-cli templates dist --dot --parents",
+    "build": "npx tsc",
+    "dev": "yarn build && yarn start",
     "watch": "nodemon",
     "start": "node dist/index.js",
-    "test": "TEMPLATE_FILES_FOLDER=\"/home/benjamin/Bureau/dev/fd-cli\" yarn build && jest --coverage"
+    "test": "yarn build && yarn jest --coverage"
   },
   "repository": "git@github.com:benjamin-fukdawurld/fd-cli.git",
   "author": "Benjamin Fukdawurld",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@types/inquirer": "^7.3.3",
+    "inquirer": "^8.1.2",
     "mustache": "^4.2.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3",
@@ -26,7 +29,6 @@
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
-    "cpy-cli": "^3.1.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.0",
