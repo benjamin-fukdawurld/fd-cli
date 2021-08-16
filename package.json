@@ -4,7 +4,8 @@
   "description": "a command line interface for FD projects",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc && npx cpy-cli templates dist --dot --parents",
+    "build": "npx tsc && npx cpy-cli templates dist --dot --parents",
+    "dev": "yarn build && yarn start",
     "watch": "nodemon",
     "start": "node dist/index.js",
     "test": "TEMPLATE_FILES_FOLDER=\"/home/benjamin/Bureau/dev/fd-cli\" yarn build && jest --coverage"
