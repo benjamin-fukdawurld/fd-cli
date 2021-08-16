@@ -18,7 +18,7 @@ describe('src folder architecture', () => {
   });
 
   afterAll(() => {
-    fs.rmdir(testDir, { recursive: true });
+    fs.rm(testDir, { recursive: true });
   });
 
   it('should contain a src directory', async () => {
@@ -81,7 +81,7 @@ describe('common files templates', () => {
   });
 
   afterAll(() => {
-    fs.rmdir(testDir, { recursive: true });
+    fs.rm(testDir, { recursive: true });
   });
 
   it('should contain a .editorconfig file', async () => {
@@ -188,7 +188,7 @@ describe('generated package.json', () => {
   });
 
   afterAll(() => {
-    fs.rmdir(testDir, { recursive: true });
+    fs.rm(testDir, { recursive: true });
   });
 
   it('should generate without error', async () => {
@@ -211,7 +211,7 @@ describe('backend installation', () => {
   });
 
   afterAll(() => {
-    fs.rmdir(testDir, { recursive: true });
+    fs.rm(testDir, { recursive: true });
   });
 
   it('should not accept illegal name', async () => {
@@ -236,10 +236,10 @@ describe('back folder architecture', () => {
     await back(testDir, templatesFolderPath, {
       packageJsonOptions: { name: 'test-package', author: 'test' },
     });
-  });
+  }, 30000);
 
   afterAll(() => {
-    fs.rmdir(testDir, { recursive: true });
+    fs.rm(testDir, { recursive: true });
   });
 
   it('should contain a back directory', async () => {
