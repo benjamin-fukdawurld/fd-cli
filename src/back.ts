@@ -5,8 +5,8 @@ import { spawn } from 'child_process';
 import logger from './logger';
 import { PackageJsonOptions, BackendOptions } from './interfaces/back';
 
-export async function createSrcFolderArchitecture(backFolderPath: string): Promise<void> {
-  const srcDir = path.join(backFolderPath, 'src');
+export async function createSrcDirArchitecture(backDirPath: string): Promise<void> {
+  const srcDir = path.join(backDirPath, 'src');
   await fs.mkdir(srcDir);
   await fs.mkdir(path.join(srcDir, 'routes'));
   await fs.mkdir(path.join(srcDir, 'controllers'));
@@ -17,95 +17,86 @@ export async function createSrcFolderArchitecture(backFolderPath: string): Promi
   await fs.mkdir(path.join(srcDir, 'interfaces'));
 }
 
-export async function createBackFolderArchitecture(backFolderPath: string): Promise<void> {
-  await fs.mkdir(backFolderPath);
-  await createSrcFolderArchitecture(backFolderPath);
-  await fs.mkdir(path.join(backFolderPath, 'doc'));
+export async function createBackDirArchitecture(backDirPath: string): Promise<void> {
+  await fs.mkdir(backDirPath);
+  await createSrcDirArchitecture(backDirPath);
+  await fs.mkdir(path.join(backDirPath, 'doc'));
 }
 
 export async function copyCommonFiles(
-  backFolderPath: string,
-  templatesFolderPath: string,
+  backDirPath: string,
+  templatesDirPath: string,
 ): Promise<void> {
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/.editorconfig'),
-    path.join(backFolderPath, '.editorconfig'),
+    path.join(templatesDirPath, 'common/.editorconfig'),
+    path.join(backDirPath, '.editorconfig'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/.eslintrc.js'),
-    path.join(backFolderPath, '.eslintrc.js'),
+    path.join(templatesDirPath, 'common/.eslintrc.js'),
+    path.join(backDirPath, '.eslintrc.js'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/.prettierrc.js'),
-    path.join(backFolderPath, '.prettierrc.js'),
+    path.join(templatesDirPath, 'common/.prettierrc.js'),
+    path.join(backDirPath, '.prettierrc.js'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/tsconfig.json'),
-    path.join(backFolderPath, 'tsconfig.json'),
+    path.join(templatesDirPath, 'common/tsconfig.json'),
+    path.join(backDirPath, 'tsconfig.json'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/.gitignore'),
-    path.join(backFolderPath, '.gitignore'),
+    path.join(templatesDirPath, 'common/.gitignore'),
+    path.join(backDirPath, '.gitignore'),
+  );
+  fs.copyFile(path.join(templatesDirPath, 'common/LICENSE'), path.join(backDirPath, 'LICENSE'));
+  fs.copyFile(path.join(templatesDirPath, 'back/Dockerfile'), path.join(backDirPath, 'Dockerfile'));
+  fs.copyFile(
+    path.join(templatesDirPath, 'common/.dockerignore'),
+    path.join(backDirPath, '.dockerignore'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/LICENSE'),
-    path.join(backFolderPath, 'LICENSE'),
+    path.join(templatesDirPath, 'back/example.env'),
+    path.join(backDirPath, 'example.env'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'back/Dockerfile'),
-    path.join(backFolderPath, 'Dockerfile'),
+    path.join(templatesDirPath, 'back/nodemon.json'),
+    path.join(backDirPath, 'nodemon.json'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'common/.dockerignore'),
-    path.join(backFolderPath, '.dockerignore'),
+    path.join(templatesDirPath, 'back/src/server.ts'),
+    path.join(backDirPath, 'src/server.ts'),
+  );
+  fs.copyFile(path.join(templatesDirPath, 'back/src/app.ts'), path.join(backDirPath, 'src/app.ts'));
+  fs.copyFile(
+    path.join(templatesDirPath, 'back/src/config.ts'),
+    path.join(backDirPath, 'src/config.ts'),
   );
   fs.copyFile(
-    path.join(templatesFolderPath, 'back/example.env'),
-    path.join(backFolderPath, 'example.env'),
-  );
-  fs.copyFile(
-    path.join(templatesFolderPath, 'back/nodemon.json'),
-    path.join(backFolderPath, 'nodemon.json'),
-  );
-  fs.copyFile(
-    path.join(templatesFolderPath, 'back/src/server.ts'),
-    path.join(backFolderPath, 'src/server.ts'),
-  );
-  fs.copyFile(
-    path.join(templatesFolderPath, 'back/src/app.ts'),
-    path.join(backFolderPath, 'src/app.ts'),
-  );
-  fs.copyFile(
-    path.join(templatesFolderPath, 'back/src/config.ts'),
-    path.join(backFolderPath, 'src/config.ts'),
-  );
-  fs.copyFile(
-    path.join(templatesFolderPath, 'back/src/interfaces/App.ts'),
-    path.join(backFolderPath, 'src/interfaces/App.ts'),
+    path.join(templatesDirPath, 'back/src/interfaces/App.ts'),
+    path.join(backDirPath, 'src/interfaces/App.ts'),
   );
 }
 
 export async function generatePackageJsonFile(
-  backFolderPath: string,
-  templatesFolderPath: string,
+  backDirPath: string,
+  templatesDirPath: string,
   options: PackageJsonOptions,
 ): Promise<void> {
   const packageJsonFile = await fs.readFile(
-    path.join(templatesFolderPath, '/back/package.json.mustache'),
+    path.join(templatesDirPath, '/back/package.json.mustache'),
     {
       encoding: 'utf8',
     },
   );
 
   await fs.writeFile(
-    path.join(backFolderPath, 'package.json'),
+    path.join(backDirPath, 'package.json'),
     Mustache.render(packageJsonFile, options),
   );
 }
 
-export async function installBack(backFolderPath: string): Promise<number> {
+export async function installBack(backDirPath: string): Promise<number> {
   return new Promise((resolve: (value: number) => void, reject: (reason: any) => void) => {
-    const process = spawn('yarn', ['install'], { cwd: backFolderPath });
+    const process = spawn('yarn', ['install'], { cwd: backDirPath });
 
     process.stdout.on('data', (data: string) => {
       logger.info(`yarn: ${data}`);
@@ -127,14 +118,14 @@ export async function installBack(backFolderPath: string): Promise<number> {
 
 export async function generateBack(
   basePath: string,
-  templatesFolderPath: string,
+  templatesDirPath: string,
   options: BackendOptions,
 ) {
-  const backFolderPath = path.join(basePath, 'back');
-  await createBackFolderArchitecture(backFolderPath);
-  await copyCommonFiles(backFolderPath, templatesFolderPath);
-  await generatePackageJsonFile(backFolderPath, templatesFolderPath, options.packageJsonOptions);
-  await installBack(backFolderPath);
+  const backDirPath = path.join(basePath, 'back');
+  await createBackDirArchitecture(backDirPath);
+  await copyCommonFiles(backDirPath, templatesDirPath);
+  await generatePackageJsonFile(backDirPath, templatesDirPath, options.packageJsonOptions);
+  await installBack(backDirPath);
 }
 
 export default generateBack;
