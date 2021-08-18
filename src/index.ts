@@ -9,6 +9,8 @@ import { ProjectConfiguration } from './interfaces/ProjectConfiguration';
 
 import { startPrompts } from './prompts';
 
+import cli from './cli';
+
 async function generateBackend(
   projectDir: string,
   templateDir: string,
@@ -49,10 +51,14 @@ async function main(): Promise<void> {
   }
 }
 
-main()
-  .then(() => {
-    logger.info('starting generation');
-  })
-  .catch((error: any) => {
-    logger.error(error.message);
-  });
+if (process.argv.length < 2) {
+  main()
+    .then(() => {
+      logger.info('starting generation');
+    })
+    .catch((error: any) => {
+      logger.error(error.message);
+    });
+} else {
+  cli();
+}

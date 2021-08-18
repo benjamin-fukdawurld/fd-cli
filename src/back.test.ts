@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import { v4 as uuid } from 'uuid';
 
 import back, {
-  createSrcFolderArchitecture,
+  createSrcDirArchitecture,
   copyCommonFiles,
   generatePackageJsonFile,
   installBack,
@@ -14,7 +14,7 @@ describe('src folder architecture', () => {
   const testDir = path.join(os.tmpdir(), `fd-cli-back-test-${uuid()}`);
   beforeAll(async () => {
     await fs.mkdir(testDir);
-    await createSrcFolderArchitecture(testDir);
+    await createSrcDirArchitecture(testDir);
   });
 
   afterAll(() => {
@@ -72,12 +72,12 @@ describe('src folder architecture', () => {
 
 describe('common files templates', () => {
   const testDir = path.join(os.tmpdir(), `fd-cli-back-files-test-${uuid()}`);
-  const templatesFolderPath = path.join(__dirname, '../templates');
+  const templatesDirPath = path.join(__dirname, '../templates');
   beforeAll(async () => {
     await fs.mkdir(testDir);
     await fs.mkdir(path.join(testDir, 'src'));
     await fs.mkdir(path.join(testDir, 'src', 'interfaces'));
-    await copyCommonFiles(testDir, templatesFolderPath);
+    await copyCommonFiles(testDir, templatesDirPath);
   });
 
   afterAll(() => {
@@ -170,14 +170,14 @@ describe('common files templates', () => {
 });
 
 describe('generated package.json', () => {
-  const templatesFolderPath = path.join(__dirname, '../templates');
+  const templatesDirPath = path.join(__dirname, '../templates');
   const testDir = path.join(os.tmpdir(), `fd-cli-package-test-${uuid()}`);
   const name = 'backtest';
   const author = 'backtest-author';
   beforeAll(async () => {
     await fs.mkdir(testDir);
     await fs.mkdir(path.join(testDir, 'back'));
-    await generatePackageJsonFile(testDir, templatesFolderPath, {
+    await generatePackageJsonFile(testDir, templatesDirPath, {
       name,
       author,
       mongo: true,
@@ -203,7 +203,7 @@ describe('generated package.json', () => {
 });
 
 describe('backend installation', () => {
-  const templatesFolderPath = path.join(__dirname, '../templates');
+  const templatesDirPath = path.join(__dirname, '../templates');
   const testDir = path.join(os.tmpdir(), `fd-cli-back-install-${uuid()}`);
   beforeAll(async () => {
     await fs.mkdir(testDir);
@@ -217,7 +217,7 @@ describe('backend installation', () => {
   it('should not accept illegal name', async () => {
     const name = 'back test';
     const author = 'backtest-author';
-    await generatePackageJsonFile(path.join(testDir, 'back'), templatesFolderPath, {
+    await generatePackageJsonFile(path.join(testDir, 'back'), templatesDirPath, {
       name,
       author,
     });
@@ -229,11 +229,11 @@ describe('backend installation', () => {
 });
 
 describe('back folder architecture', () => {
-  const templatesFolderPath = path.join(__dirname, '../templates');
+  const templatesDirPath = path.join(__dirname, '../templates');
   const testDir = path.join(os.tmpdir(), `fd-cli-test-${uuid()}`);
   beforeAll(async () => {
     await fs.mkdir(testDir);
-    await back(testDir, templatesFolderPath, {
+    await back(testDir, templatesDirPath, {
       packageJsonOptions: { name: 'test-package', author: 'test' },
     });
   }, 30000);
