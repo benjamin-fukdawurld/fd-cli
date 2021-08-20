@@ -1,0 +1,16 @@
+FROM postgres:13
+
+WORKDIR /usr/db
+
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+COPY sql /docker-entrypoint-initdb.d
+
+EXPOSE 5432
+
+ENV POSTGRES_CLIENTUSER={{postgresClientUser}}
+ENV POSTGRES_CLIENTPASSWORD={{postgresClientPassword}}
+
+ENV ARGON2_SALT={{postgresArgon2Salt}}
+
+RUN apt-get update && apt-get install -y && apt-get install argon2 -y
