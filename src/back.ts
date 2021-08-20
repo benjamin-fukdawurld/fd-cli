@@ -54,10 +54,6 @@ export async function copyCommonFiles(
     path.join(backDirPath, '.dockerignore'),
   );
   fs.copyFile(
-    path.join(templatesDirPath, 'back/example.env'),
-    path.join(backDirPath, 'example.env'),
-  );
-  fs.copyFile(
     path.join(templatesDirPath, 'back/nodemon.json'),
     path.join(backDirPath, 'nodemon.json'),
   );
@@ -91,6 +87,35 @@ export async function generatePackageJsonFile(
   await fs.writeFile(
     path.join(backDirPath, 'package.json'),
     Mustache.render(packageJsonFile, options),
+  );
+}
+
+export async function generateExampleEnvFile(
+  backDirPath: string,
+  templatesDirPath: string,
+  options: PackageJsonOptions,
+): Promise<void> {
+  const exampleEnvFile = await fs.readFile(
+    path.join(templatesDirPath, '/back/example.env.mustache'),
+    {
+      encoding: 'utf8',
+    },
+  );
+
+  const envFileOption = {
+    mongoDbUser: 'mongodb_user',
+    mongoDbPassword: 'mongodb_password',
+
+    databaseName: 'postgres_db_name',
+    databaseHost: 'postgres_db_home',
+    databasePort: 5432,
+    databaseUserName: 'postgres_user_name',
+    databaseUserPassword: 'postgres_user_password',
+  };
+
+  await fs.writeFile(
+    path.join(backDirPath, 'example.env'),
+    Mustache.render(exampleEnvFile, { ...options, ...envFileOption }),
   );
 }
 

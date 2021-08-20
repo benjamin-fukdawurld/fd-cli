@@ -6,4 +6,5 @@ export interface ProjectConfiguration {
   author: string;
   modules: AvailableModules[];
   databaseOptions: DatabaseAvailableOptions[];
+  databaseImage: boolean;
 }

@@ -30,6 +30,13 @@ export async function startPrompts(): Promise<ProjectConfiguration> {
       name: 'databaseOptions',
       when: (answer: any) => !!answer?.modules.includes('back'),
     },
+    {
+      type: 'confirm',
+      message: 'setup postgres docker image',
+      default: false,
+      name: 'databaseImage',
+      when: (answer: any) => !!answer?.databaseOptions.includes('postgres'),
+    },
   ]);
 }
 
